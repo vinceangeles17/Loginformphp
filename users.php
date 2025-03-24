@@ -1,0 +1,91 @@
+<?php
+session_start();
+include 'connection.php'; 
+
+if (!isset($_SESSION['email'])) {
+    header("Location: login.php");
+    exit();
+}
+
+if (isset($_GET['edit_id'])) {
+    $edit_id = $_GET['edit_id'];
+    $stmt = $conn->prepare("SELECT firstname, lastname, email, created_at, edited_at FROM users1 WHERE id = ?");
+    $stmt->bind_param("i", $edit_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
+    $firstname = $_POST['firstname'];
+    $lastname = $_POST['lastname'];
+    $email = $_POST['email'];
+    $id = $_POST['id'];
+
+    $stmt = $conn->prepare("UPDATE users1 SET firstname = ?, lastname = ?, email = ? WHERE id = ?");
+    $stmt->bind_param("sssi", $firstname, $lastname, $email, $id);
+    $stmt->execute();
+    header("Location: users.php");
+    exit();
+}
+
+
+$query = "SELECT id, firstname, lastname, email, created_at, edited_at FROM users1";
+$result = $conn->query($query);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users Management</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <div class="container large-container">
+	<a href="welcome.php" class="back-button">Go Back?</a>
+        <h2>Users List</h2>
+        
+        <?php if (isset($user)): ?>
+            <h3>Edit User</h3>
+            <form method="POST" action="">
+                <input type="hidden" name="id" value="<?php echo htmlspecialchars($edit_id); ?>">
+                <label>First Name:</label>
+                <input type="text" name="firstname" value="<?php echo htmlspecialchars($user['firstname']); ?>" required>
+                <label>Last Name:</label>
+                <input type="text" name="lastname" value="<?php echo htmlspecialchars($user['lastname']); ?>" required>
+                <label>Email:</label>
+                <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+                <input type="submit" name="update" value="Update">
+            </form>
+        <?php endif; ?>
+
+        <h3>All Users</h3>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+		<th>Created At</th>
+                <th>Edited At</th>
+                <th>EDIT</th>
+            </tr>
+            <?php while ($row = $result->fetch_assoc()): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($row['id']); ?></td>
+                <td><?php echo htmlspecialchars($row['firstname']); ?></td>
+                <td><?php echo htmlspecialchars($row['lastname']); ?></td>
+                <td><?php echo htmlspecialchars($row['email']); ?></td>
+                <td><?php echo htmlspecialchars($row['created_at']); ?></td>
+                <td><?php echo htmlspecialchars($row['edited_at']); ?></td>
+                <td>
+                    <a href="users.php?edit_id=<?php echo $row['id']; ?>">Edit</a>
+                </td>
+            </tr>
+            <?php endwhile; ?>
+        </table>
+    </div>
+</body>
+</html>
