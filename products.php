@@ -194,7 +194,7 @@ $result = $conn->query($query);
                     <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                     <td><?php echo htmlspecialchars($row['edited_at']); ?></td>
                     <td>
-                        <a href="products.php?edit_id=<?php echo $row['id']; ?>">Edit</a>
+                        <a href="products.php?edit_id=<?php echo $row['id']; ?>" onclick="return alert('You are now Editing')">Edit</a>
                         <a href="products.php?delete_id=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
                     </td>
                 </tr>
@@ -206,7 +206,6 @@ $result = $conn->query($query);
                     <th>Category</th>
                     <th>Price</th>
                     <th>Stock</th>
-                    <th>Supplier</th>
                     <th>Description</th>
                     <th>Order</th>
                 </tr>
@@ -217,14 +216,12 @@ $result = $conn->query($query);
                     <td><?php echo htmlspecialchars($row['category']); ?></td>
                     <td><?php echo htmlspecialchars($row['price']); ?></td>
                     <td><?php echo htmlspecialchars($row['stock']); ?></td>
-                    <td><?php echo htmlspecialchars($row['supplier']); ?></td>
                     <td><?php echo htmlspecialchars($row['description']); ?></td>
                     <td>
                         <form method="POST" action="">
                             <input type="hidden" name="product_id" value="<?php echo $row['id']; ?>">
                             <input type="number" name="quantity" min="1" max="<?php echo $row['stock']; ?>" required>
-                            <input type="submit" name="order_product" value="Order"> 
-                                                                                                                                               
+                            <input type="submit" name="order_product" value="Order" onclick="return confirm('Are you sure you want to buy this products')">                                                                                                                 
                         </form>
                     </td>
                 </tr>   

@@ -31,6 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
     exit();
 }
 
+if (isset($_GET['delete_id'])) {
+    $delete_id = $_GET['delete_id'];
+    $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
+    $stmt->bind_param("i", $delete_id);
+    $stmt->execute();
+    header("Location: users.php");
+    exit();
+}
+
 $query = "SELECT id, firstname, lastname, email, role, created_at, edited_at FROM users1";
 $result = $conn->query($query);
 ?>
@@ -95,6 +104,7 @@ $result = $conn->query($query);
                 <td><?php echo htmlspecialchars($row['edited_at']); ?></td>
                 <td>
                     <a href="users.php?edit_id=<?php echo $row['id']; ?>">Edit</a>
+                    <a href="users.php?delete_id=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to remove this User?');">Delete</a>
                 </td>
             </tr>
             <?php endwhile; ?>

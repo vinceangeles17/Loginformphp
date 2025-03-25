@@ -34,7 +34,7 @@ if ($result->num_rows === 0) {
         <a href="products.php">Products</a>
         <a href="orders.php">Orders</a>
     </div>
-    <div class="container">
+    <div class="container medium-container">
     <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
         <h2>Your Orders</h2>
         <table>

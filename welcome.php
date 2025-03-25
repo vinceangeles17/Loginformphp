@@ -46,8 +46,7 @@ $user = $result->fetch_assoc();
 </head>
 <body>
     <div class="container">
-        <h2>Welcome, <?php echo htmlspecialchars($user['firstname'] . ' ' . $user['lastname']); ?>!</h2>
-        <p>Your email: <?php echo htmlspecialchars($user['email']); ?></p> 
+        <h2>Welcome, <?php echo htmlspecialchars(($user['role']) . ' ' . $user['firstname'] . ' ' . $user['lastname']); ?>!</h2>
         <form method="POST" action="">
         <?php if ($user['role'] === 'Admin'): ?>
                 <input type="submit" name="users" value="Users">
