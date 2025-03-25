@@ -14,7 +14,6 @@ $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Debugging: Check if any orders are returned
 if ($result->num_rows === 0) {
     echo "<p>No orders found for this user.</p>";
 }
@@ -29,8 +28,14 @@ if ($result->num_rows === 0) {
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="welcome.php">Home</a>
+        <a href="products.php">Products</a>
+        <a href="orders.php">Orders</a>
+    </div>
     <div class="container">
-        <a href="welcome.php" class="back-button">Go Back?</a>
+    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
         <h2>Your Orders</h2>
         <table>
             <tr>
@@ -51,6 +56,7 @@ if ($result->num_rows === 0) {
             <?php endwhile; ?>
         </table>
     </div>
+    <script src="index.js"></script>
 </body>
 </html>
 

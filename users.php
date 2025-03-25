@@ -31,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
     exit();
 }
 
-
 $query = "SELECT id, firstname, lastname, email, role, created_at, edited_at FROM users1";
 $result = $conn->query($query);
 ?>
@@ -45,7 +44,13 @@ $result = $conn->query($query);
 </head>
 <body>
     <div class="container large-container">
-	<a href="welcome.php" class="back-button">Go Back?</a>
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="welcome.php">Home</a>
+            <a href="users.php">Users</a>
+            <a href="products.php">Products</a>
+        </div>
+        <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
         <h2>Users List</h2>
         
         <?php if (isset($user)): ?>
@@ -95,5 +100,6 @@ $result = $conn->query($query);
             <?php endwhile; ?>
         </table>
     </div>
+    <script src="index.js"></script>
 </body>
 </html>

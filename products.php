@@ -114,9 +114,15 @@ $result = $conn->query($query);
 </head>
 <body>
     <div class="container large-container">
-	<a href="welcome.php" class="back-button">Go Back?</a>
+        <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
         <h2>Products List</h2>
         <?php if ($user['role'] === 'Admin'): ?>
+            <div id="mySidenav" class="sidenav">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <a href="welcome.php">Home</a>
+                <a href="users.php">Users</a>
+                <a href="products.php">Products</a>
+            </div>
             <?php if (isset($product)): ?>
                 <h3>Edit Product</h3>
                 <form method="POST" action="">
@@ -153,6 +159,13 @@ $result = $conn->query($query);
                     <input type="submit" name="add_product" value="Add Product">
                 </form>
             <?php endif; ?>
+        <?php else: ?>   
+            <div id="mySidenav" class="sidenav">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <a href="welcome.php">Home</a>
+                <a href="products.php">Products</a>
+                <a href="orders.php">Orders</a>
+            </div>
         <?php endif; ?>
         <h3>All Products</h3>
             <table>
@@ -219,6 +232,7 @@ $result = $conn->query($query);
             <?php endif;?>  
         </table>
     </div>
+    <script src="index.js"></script>
 </body>
 </html>
 
