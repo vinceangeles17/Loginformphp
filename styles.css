@@ -41,7 +41,8 @@ input[type="email"],
 input[type="password"],
 input[type="submit"],
 input[type="number"],
-textarea {
+textarea,
+select {
     width: 100%;
     padding: 10px;
     margin: 5px 0 20px;
@@ -83,7 +84,7 @@ a:hover {
 .back-button {
    position: absolute;
    top: 55px;
-   left: 515px;
+   left: 600px;
    text-decoration: none;
    padding: 10px 15px; 
 }
