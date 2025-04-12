@@ -60,11 +60,12 @@ $conn->close();
             <input type="text" name="lastname" required>
             <label>Email:</label>
             <input type="email" name="email" required>
-            <label>Role:</label>
+          <!-- Tanggalin na lang ba to? kasi di naman dapat nasa choice ang pag register ng role e? sana all choice 
+              <label>Role:</label>
                 <select name="role" required>
                     <option value="Admin">Admin</option>
                     <option value="Customer">Customer</option>
-                </select>
+                </select> -->
             <label>Password:</label>
             <input type="password" name="password" required>
             <label>Confirm Password:</label>

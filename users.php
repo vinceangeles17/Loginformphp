@@ -53,12 +53,13 @@ $result = $conn->query($query);
 </head>
 <body>
     <div class="container large-container">
-        <div id="mySidenav" class="sidenav">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="welcome.php">Home</a>
-            <a href="users.php">Users</a>
-            <a href="products.php">Products</a>
-        </div>
+         <div id="mySidenav" class="sidenav">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <a href="welcome.php">Home</a>
+                <a href="users.php">Users</a>
+                <a href="products.php">Products</a>
+                <a href="orders.php">Order List</a>
+            </div>
         <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
         <h2>Users List</h2>
         
@@ -103,8 +104,8 @@ $result = $conn->query($query);
                 <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                 <td><?php echo htmlspecialchars($row['edited_at']); ?></td>
                 <td>
-                    <a href="users.php?edit_id=<?php echo $row['id']; ?>">Edit</a>
-                    <a href="users.php?delete_id=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to remove this User?');">Delete</a>
+                <a href="users.php?edit_id=<?php echo $row['id']; ?>">Edit</a>
+                <a href="users.php?delete_id=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to remove this User?');">Delete</a>
                 </td>
             </tr>
             <?php endwhile; ?>

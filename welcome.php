@@ -28,6 +28,11 @@ if (isset($_POST['orders'])) {
     exit();
 }
 
+if (isset($_POST['mycart'])) {
+    header("Location: mycart.php");
+    exit();
+}
+
 
 $email = $_SESSION['email'];
 $stmt = $conn->prepare("SELECT firstname, lastname, email, role FROM users1 WHERE email = ?");
@@ -51,8 +56,10 @@ $user = $result->fetch_assoc();
         <?php if ($user['role'] === 'Admin'): ?>
                 <input type="submit" name="users" value="Users">
                 <input type="submit" name="products" value="Products">
+                <input type="submit" name="orders" value="Order List">
             <?php else: ?>
                 <input type="submit" name="products" value="Products">
+                <input type="submit" name="mycart" value="My Cart">
                 <input type="submit" name="orders" value="Orders">
             <?php endif; ?>
             <input type="submit" name="logout" value="Logout">

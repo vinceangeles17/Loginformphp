@@ -7,39 +7,21 @@ if (!isset($_SESSION['email'])) {
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['order_product'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_to_cart'])) {
     $product_id = $_POST['product_id'];
     $quantity = $_POST['quantity'];
 
-   
-    $stmt = $conn->prepare("SELECT stock FROM products WHERE id = ?");
+    $stmt = $conn->prepare("SELECT product_name, price FROM products WHERE id = ?");
     $stmt->bind_param("i", $product_id);
     $stmt->execute();
     $result = $stmt->get_result();
     $product = $result->fetch_assoc();
 
-    if ($product['stock'] >= $quantity) {
-        $new_stock = $product['stock'] - $quantity;
-        $stmt = $conn->prepare("UPDATE products SET stock = ? WHERE id = ?");
-        $stmt->bind_param("ii", $new_stock, $product_id);
-        if (!$stmt->execute()) {
-            echo "Error updating stock: " . htmlspecialchars($stmt->error);
-        }
-
-        $query = "INSERT INTO orders (user_email, product_id, quantity, created_at) VALUES (?, ?, ?, NOW())";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param("sis", $_SESSION['email'], $product_id, $quantity);
-        
-        if ($stmt->execute()) {
-            echo "Order placed successfully.";
-        } else {
-            echo "Error placing order: " . htmlspecialchars($stmt->error);
-        }
-
-        header("Location: products.php");
-        exit();
-    } else {
-        $error_message = "Not enough stock available.";
+    if ($product) {
+        $total_price = $product['price'] * $quantity;
+        $stmt = $conn->prepare("INSERT INTO my_cart (user_email, product_id, product_name, price, quantity, total_price) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sisdid", $_SESSION['email'], $product_id, $product['product_name'], $product['price'], $quantity, $total_price);
+        $stmt->execute();
     }
 }
 
@@ -109,7 +91,12 @@ $result = $conn->query($query);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Products Management</title>
+    <?php if ($user['role'] === 'Admin'): ?>
+            <title>Products Management</title>
+    <?php elseif ($user['role'] !== 'Admin'): ?>
+            <title>Products</title>
+    <?php endif; ?>
+
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
@@ -122,6 +109,7 @@ $result = $conn->query($query);
                 <a href="welcome.php">Home</a>
                 <a href="users.php">Users</a>
                 <a href="products.php">Products</a>
+                <a href="orders.php">Order List</a>
             </div>
             <?php if (isset($product)): ?>
                 <h3>Edit Product</h3>
@@ -164,6 +152,7 @@ $result = $conn->query($query);
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                 <a href="welcome.php">Home</a>
                 <a href="products.php">Products</a>
+                <a href="mycart.php">My Cart</a>
                 <a href="orders.php">Orders</a>
             </div>
         <?php endif; ?>
@@ -207,7 +196,8 @@ $result = $conn->query($query);
                     <th>Price</th>
                     <th>Stock</th>
                     <th>Description</th>
-                    <th>Order</th>
+                    <th>Quantity</th>
+                    <th>Action</th>
                 </tr>
                 <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
@@ -217,13 +207,15 @@ $result = $conn->query($query);
                     <td><?php echo htmlspecialchars($row['price']); ?></td>
                     <td><?php echo htmlspecialchars($row['stock']); ?></td>
                     <td><?php echo htmlspecialchars($row['description']); ?></td>
+                   <form method="POST" action="">
                     <td>
-                        <form method="POST" action="">
-                            <input type="hidden" name="product_id" value="<?php echo $row['id']; ?>">
                             <input type="number" name="quantity" min="1" max="<?php echo $row['stock']; ?>" required>
-                            <input type="submit" name="order_product" value="Order" onclick="return confirm('Are you sure you want to buy this products')">                                                                                                                 
-                        </form>
                     </td>
+                    <td>
+                            <input type="hidden" name="product_id" value="<?php echo $row['id']; ?>">
+                            <input type="submit" name="add_to_cart" value="Add to Cart";>                                                                                                                
+                    </td>
+                   </form>
                 </tr>   
                 <?php endwhile; ?>
             <?php endif;?>  
