@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #878a8b ;
     margin: 0;
     padding: 0;
 }
@@ -12,19 +12,26 @@ body {
     background: white;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border: 2px solid  #007bff;
+    border: 4px solid  #007bff;
 }
-
-.large-container {
-    width: 700px;
+.medium-container{
+    width: 500px;
     margin: 50px auto;
     padding: 20px;
     background: white;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border: 2px solid  #007bff;
+    border: 4px solid  #007bff;
 }
-
+.large-container {
+    width: 850px;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 4px solid  #007bff;
+}
 
 h2 {
     text-align: center;
@@ -41,7 +48,8 @@ input[type="email"],
 input[type="password"],
 input[type="submit"],
 input[type="number"],
-textarea {
+textarea,
+select {
     width: 100%;
     padding: 10px;
     margin: 5px 0 20px;
@@ -80,10 +88,79 @@ a:hover {
     text-decoration: underline;
 }
 
-.back-button {
-   position: absolute;
-   top: 55px;
-   left: 515px;
-   text-decoration: none;
-   padding: 10px 15px; 
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #003f7f;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    font-weight: bold;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 0px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #ffffff;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #4d0c0c;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+caption {
+    font-size: 1.5em;
+    margin: 10px;
+    color: #333;
 }

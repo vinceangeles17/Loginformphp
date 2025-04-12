@@ -6,6 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
     $email = $_POST['email'];
+    $role = $_POST['role'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
@@ -26,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-            $stmt = $conn->prepare("INSERT INTO users1 (firstname, lastname, email, password) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $firstname, $lastname, $email, $hashed_password);
+            $stmt = $conn->prepare("INSERT INTO users1 (firstname, lastname, email, role, password) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssss", $firstname, $lastname, $email, $role, $hashed_password);
 
             if ($stmt->execute()) {
                 header("Location: login.php");
@@ -59,6 +60,11 @@ $conn->close();
             <input type="text" name="lastname" required>
             <label>Email:</label>
             <input type="email" name="email" required>
+            <label>Role:</label>
+                <select name="role" required>
+                    <option value="Admin">Admin</option>
+                    <option value="Customer">Customer</option>
+                </select>
             <label>Password:</label>
             <input type="password" name="password" required>
             <label>Confirm Password:</label>
