@@ -95,8 +95,8 @@ textarea {
 input[type="submit"],
 button {
     width: 100%;
-    padding: 8px;
-    margin: 0px 0;
+    padding: 12px;
+    margin: 5px 0px;
     background-color: #8b5a2b;
     color: white;
     border: none;

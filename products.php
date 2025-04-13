@@ -7,6 +7,7 @@ if (!isset($_SESSION['email'])) {
     exit();
 }
 
+// Handle adding to cart for customers
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_to_cart'])) {
     $product_id = $_POST['product_id'];
     $quantity = $_POST['quantity'];
@@ -22,17 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_to_cart'])) {
         $stmt = $conn->prepare("INSERT INTO my_cart (user_email, product_id, product_name, price, quantity, total_price) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("sisdid", $_SESSION['email'], $product_id, $product['product_name'], $product['price'], $quantity, $total_price);
         $stmt->execute();
+
+        // Set session variable for customer notification
+        $_SESSION['cart_message'] = 'Item has been successfully added to your cart!';
+        header("Location: products.php");
+        exit();
     }
 }
 
-$email = $_SESSION['email'];
-$stmt = $conn->prepare("SELECT role FROM users1 WHERE email = ?");
-$stmt->bind_param("s", $email);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-$user_role = $user['role'];
-
+// Handle adding products for admins
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_product'])) {
     $product_name = $_POST['product_name'];
     $category = $_POST['category'];
@@ -44,9 +43,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_product'])) {
     $stmt = $conn->prepare("INSERT INTO products (product_name, category, price, stock, supplier, description) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssdiss", $product_name, $category, $price, $stock, $supplier, $description);
     $stmt->execute();
+
+    // Set session variable for admin notification
+    $_SESSION['product_message'] = 'New product has been successfully added!';
     header("Location: products.php");
     exit();
 }
+
+$email = $_SESSION['email'];
+$stmt = $conn->prepare("SELECT role FROM users1 WHERE email = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+$user_role = $user['role'];
 
 if (isset($_GET['edit_id'])) {
     $edit_id = $_GET['edit_id'];
@@ -82,7 +92,6 @@ if (isset($_GET['delete_id'])) {
     exit();
 }
 
-
 $query = "SELECT * FROM products";
 $result = $conn->query($query);
 ?>
@@ -92,11 +101,10 @@ $result = $conn->query($query);
 <head>
     <meta charset="UTF-8">
     <?php if ($user['role'] === 'Admin'): ?>
-            <title>Products Management</title>
+        <title>Products Management</title>
     <?php elseif ($user['role'] !== 'Admin'): ?>
-            <title>Products</title>
+        <title>Products</title>
     <?php endif; ?>
-
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
@@ -157,7 +165,7 @@ $result = $conn->query($query);
             </div>
         <?php endif; ?>
         <h3>All Products</h3>
-            <table>
+        <table>
             <?php if ($user['role'] === 'Admin'): ?>
                 <tr>
                     <th>ID</th>
@@ -174,7 +182,7 @@ $result = $conn->query($query);
                 <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
                     <td><?php echo htmlspecialchars($row['id']); ?></td>
-                    <td><?php echo htmlspecialchars ($row['product_name']); ?></td>
+                    <td><?php echo htmlspecialchars($row['product_name']); ?></td>
                     <td><?php echo htmlspecialchars($row['category']); ?></td>
                     <td><?php echo htmlspecialchars($row['price']); ?></td>
                     <td><?php echo htmlspecialchars($row['stock']); ?></td>
@@ -202,26 +210,40 @@ $result = $conn->query($query);
                 <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
                     <td><?php echo htmlspecialchars($row['id']); ?></td>
-                    <td><?php echo htmlspecialchars ($row['product_name']); ?></td>
+                    <td><?php echo htmlspecialchars($row['product_name']); ?></td>
                     <td><?php echo htmlspecialchars($row['category']); ?></td>
                     <td><?php echo htmlspecialchars($row['price']); ?></td>
                     <td><?php echo htmlspecialchars($row['stock']); ?></td>
                     <td><?php echo htmlspecialchars($row['description']); ?></td>
-                   <form method="POST" action="">
-                    <td>
+                    <form method="POST" action="">
+                        <td>
                             <input type="number" name="quantity" min="1" max="<?php echo $row['stock']; ?>" required>
-                    </td>
-                    <td>
+                        </td>
+                        <td>
                             <input type="hidden" name="product_id" value="<?php echo $row['id']; ?>">
-                            <input type="submit" name="add_to_cart" value="Add to Cart";>                                                                                                                
-                    </td>
-                   </form>
+                            <input type="submit" name="add_to_cart" value="Add to Cart">                                                                                                                 
+                        </td>
+                    </form>
                 </tr>   
                 <?php endwhile; ?>
             <?php endif;?>  
         </table>
     </div>
     <script src="index.js"></script>
+
+    <?php
+    // Display notification for Admin if set
+    if (isset($_SESSION['product_message'])) {
+        echo "<script>alert('" . $_SESSION['product_message'] . "');</script>";
+        unset($_SESSION['product_message']); // Clear the message after displaying
+    }
+
+    // Display notification for Customer if set
+    if (isset($_SESSION['cart_message'])) {
+        echo "<script>alert('" . $_SESSION['cart_message'] . "');</script>";
+        unset($_SESSION['cart_message']); // Clear the message after displaying
+    }
+    ?>
 </body>
 </html>
 
