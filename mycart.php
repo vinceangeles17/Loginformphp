@@ -31,13 +31,26 @@ $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
-
+            
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>My Cart</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <!-- SCRIPT FOR ACTION CONFIRMATION -->
+    <script>
+        function confirmDelete() 
+        {
+            return confirm('Are you sure you want to remove this item from the cart?');
+        }
+
+        function confirmOrder() {
+            return confirm('Proceed to order this item?');
+        }
+    </script>
+
 </head>
 <body>
     <div class="container large-container">
@@ -65,21 +78,19 @@ $result = $stmt->get_result();
                 <td><?php echo htmlspecialchars($row['price']); ?></td>
                 <td><?php echo htmlspecialchars($row['quantity']); ?></td>
                 <td><?php echo htmlspecialchars($row['total_price']); ?></td>
+
+                <!-- CONFIRM BUTTONS -->
                 <td>
-                    <form method="POST" action="orders.php">
-                        <input type="hidden" name="product_id" value="<?php echo $row['product_id']; ?>">
-                        <input type="hidden" name="quantity" value="<?php echo $row['quantity']; ?>">
-                        <input type="hidden" name="product_name" value="<?php echo $row['product_name']; ?>">
-                        <input type="hidden" name="price" value="<?php echo $row['price']; ?>">
-                        <input type="hidden" name="total_price" value="<?php echo $row['total_price']; ?>">
-                        <input type="hidden" name="cart_id" value="<?php echo $row['id']; ?>">
-                        <input type="submit" name="order" value="Order"> <!--LAGYAN NYO NA LANG ALERT TO-->
-                    </form>
+                        <form method="POST" action="orders.php" onsubmit="return confirmOrder();">
+                            <input type="hidden" name="product_id" value="<?php echo $row['product_id']; ?>">
+                            <input type="hidden" name="quantity" value="<?php echo $row['quantity']; ?>">
+                            <input type="submit" name="order" value="Order">  
+                        </form>
                     <td>
-                    <form method="POST" action="" style="display:inline;">
-                        <input type="hidden" name="cart_id" value="<?php echo $row['id']; ?>"> 
-                        <input type="submit" name="delete" value="Delete" onclick="return confirm('Are you sure you want to delete this item from the cart?');">
-                    </form>
+                        <form method="POST" action="" style="display:inline;" onsubmit="return confirmDelete();">
+                            <input type="hidden" name="cart_id" value="<?php echo $row['id']; ?>"> 
+                            <input type="submit" name="delete" value="Delete">
+                        </form>
                     </td>
                 </td>
             </tr>

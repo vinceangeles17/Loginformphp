@@ -163,12 +163,12 @@ $result = $stmt->get_result();
                         <?php if ($user['role'] === 'Admin' && $row['status'] === 'Pending'): ?>
                             <form method="POST" action="">
                                 <input type="hidden" name="order_id" value="<?php echo $row['id']; ?>">
-                                <input type="submit" name="in_transit" value="Mark as In Transit">
+                                <input type="submit" name="in_transit" value="Mark as In Transit" onclick="return confirm('Are you sure you want to mark this order as In Transit?');">
                             </form>
                         <?php elseif ($user['role'] !== 'Admin' && $row['status'] === 'In Transit'): ?>
                             <form method="POST" action="">
                                 <input type="hidden" name="order_id" value="<?php echo $row['id']; ?>">
-                                <input type="submit" name="received" value="Mark as Received">
+                                <input type="submit" name="received" value="Mark as Received" onclick="return confirm('Have you received the item?');">
                             </form>
                         <?php endif; ?>
                     </td>
